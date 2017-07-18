@@ -8,6 +8,24 @@
 /* #define ILIST_DEBUG */
 #define Assert(e) assert(e)
 
+#define CppAsString(identifier) #identifier
+#define CppAsString2(x)			CppAsString(x)
+#define CppConcat(x, y)			x##y
+
+#define StaticAssertStmt(condition, errmessage) \
+		do { _Static_assert(condition, errmessage); } while(0)
+#define StaticAssertExpr(condition, errmessage) \
+		({ StaticAssertStmt(condition, errmessage); true; })
+
+#define AssertVariableIsOfType(varname, typename) \
+		StaticAssertStmt(sizeof(varname) == sizeof(typename), \
+		CppAsString(varname) " does not have type " CppAsString(typename))
+#define AssertVariableIsOfTypeMacro(varname, typename) \
+		((void) StaticAssertExpr(sizeof(varname) == sizeof(typename),		\
+		CppAsString(varname) " does not have type " CppAsString(typename)))
+
+
+
 /*
  * Node of a doubly linked list.
  *
